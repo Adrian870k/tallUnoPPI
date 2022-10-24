@@ -12,44 +12,44 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TBL_TAREA")
 public class TareaEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
-	private Integer id;
-	@Column(name = "nombre")
-	private String nombre;
+    @Id
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_tarea")
+    private Integer idTarea;
+    @Column(name = "nombre")
+    private String nombre;
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        TareaEntity other = (TareaEntity) obj;
+        return Objects.equals(idTarea, other.idTarea);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		TareaEntity other = (TareaEntity) obj;
-		return Objects.equals(id, other.id);
-	}
+    public Integer getId() {
+        return idTarea;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public String getNombre() {
+        return nombre;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(idTarea);
+    }
 
-	public String getNombre() {
-		return nombre;
-	}
+    public void setId(Integer id) {
+        this.idTarea = id;
+    }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
 }

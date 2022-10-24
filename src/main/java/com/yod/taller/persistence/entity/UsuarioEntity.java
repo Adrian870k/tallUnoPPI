@@ -27,9 +27,8 @@ public class UsuarioEntity {
 	private boolean activo;
 	@Column(name = "depemdencia")
 	private Dependencia dependencia;
-	@Column(name = "perfil")
 	private Perfil perfil;
-	@OneToMany(targetEntity=FilaEntity.class, mappedBy="idTarea", fetch=FetchType.EAGER)
+	@OneToMany(targetEntity=FilaEntity.class, mappedBy="tarea", fetch=FetchType.EAGER)
 	private List<FilaEntity> fila;
 
 	@Override
