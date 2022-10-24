@@ -23,7 +23,7 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
+    
     @Autowired
     private UsuarioInDTOToUsuario dtoUsuario;
 
@@ -57,7 +57,7 @@ public class UsuarioService {
     public RespuestaDTO deleteUserById(Integer id) {
         RespuestaDTO respuesta = new RespuestaDTO();
         Optional<UsuarioEntity> user = this.usuarioRepository.findById(id);
-        if(user.isPresent()) {
+        if(!user.isPresent()) {
             respuesta.setRespuesta("Fallo");
             respuesta.setDescripcion("El usuario no fue posible ser encontrado");
             return respuesta;
