@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yod.taller.mapper.UsuarioInDTOToUsuario;
+import com.yod.taller.persistence.entity.FilaEntity;
 import com.yod.taller.persistence.entity.UsuarioEntity;
+import com.yod.taller.persistence.repository.FilaRepository;
 import com.yod.taller.persistence.repository.UsuarioRepository;
 import com.yod.taller.services.dto.RespuestaDTO;
 import com.yod.taller.services.dto.UsuarioDTO;
@@ -28,17 +30,14 @@ public class UsuarioService {
     @Autowired
     private UsuarioInDTOToUsuario dtoUsuario;
 
+    @Autowired
+    private FilaRepository filaRepository;
+    
     public RespuestaDTO createUser(UsuarioDTO usuarioDTO) {
         RespuestaDTO respuesta = new RespuestaDTO();
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
-            LocalDate year = LocalDate.now();
-            
             UsuarioEntity user = dtoUsuario.map(usuarioDTO);
-            String fechaFormat = formatter.format(user.getFechaNacimiento());
-            int yearActual = year.getYear(); 
-            int edad = yearActual - Integer.parseInt(fechaFormat);
-            if (edad < 18) {
+            if (this.validacionEdad(user) < 18) {
                 respuesta.setRespuesta("Fallo");
                 respuesta.setDescripcion("El usuario a registrar es menor de edad");
                 return respuesta;
@@ -53,6 +52,15 @@ public class UsuarioService {
             return respuesta;
         }
     }
+    
+    private Integer validacionEdad(UsuarioEntity user) {
+        LocalDate year = LocalDate.now();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
+        String fechaFormat = formatter.format(user.getFechaNacimiento());
+        int yearActual = year.getYear(); 
+        int edad = yearActual - Integer.parseInt(fechaFormat);
+        return edad;
+    }
 
     public List<UsuarioEntity> findAll() {
         return this.usuarioRepository.findAll();
@@ -62,11 +70,16 @@ public class UsuarioService {
     public RespuestaDTO deleteUserById(Integer id) {
         RespuestaDTO respuesta = new RespuestaDTO();
         Optional<UsuarioEntity> user = this.usuarioRepository.findById(id);
+        List<FilaEntity> fila = user.get().getFila();
         if(!user.isPresent()) {
             respuesta.setRespuesta("Fallo");
             respuesta.setDescripcion("El usuario no fue posible ser encontrado");
             return respuesta;
         }
+        for (int i = 0; i < fila.size(); i++) {
+            this.filaRepository.delete(fila.remove(i));
+        }
+                 
         this.usuarioRepository.deleteUsuarioById(id);
         respuesta.setRespuesta("Exitoso");
         respuesta.setDescripcion("Usuario eliminado");
