@@ -17,7 +17,6 @@ public class FilaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer idFila;
-
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tarea", referencedColumnName = "id_tarea")

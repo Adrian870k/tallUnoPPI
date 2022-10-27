@@ -1,6 +1,7 @@
 package com.yod.taller.services;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,9 +32,13 @@ public class UsuarioService {
         RespuestaDTO respuesta = new RespuestaDTO();
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
+            LocalDate year = LocalDate.now();
+            
             UsuarioEntity user = dtoUsuario.map(usuarioDTO);
             String fechaFormat = formatter.format(user.getFechaNacimiento());
-            if (Integer.parseInt(fechaFormat) > 2004) {
+            int yearActual = year.getYear(); 
+            int edad = yearActual - Integer.parseInt(fechaFormat);
+            if (edad < 18) {
                 respuesta.setRespuesta("Fallo");
                 respuesta.setDescripcion("El usuario a registrar es menor de edad");
                 return respuesta;
@@ -68,4 +73,21 @@ public class UsuarioService {
         return respuesta;
         
     }
+    
+    @Transactional
+    public RespuestaDTO modificarUsuario(Integer id) {
+        RespuestaDTO respuesta = new RespuestaDTO();
+        Optional<UsuarioEntity> user = this.usuarioRepository.findById(id);
+        if(!user.isPresent()) {
+            respuesta.setRespuesta("Fallo");
+            respuesta.setDescripcion("El usuario no se encuantra en el sistema");
+            return respuesta;
+        }
+        this.usuarioRepository.modificarUsuarioById(id);
+        respuesta.setRespuesta("Respuesta exitosa");
+        respuesta.setDescripcion("Se modifico correctamente el usuario");
+        return respuesta;
+        
+    }
+    
 }

@@ -2,6 +2,8 @@ package com.yod.taller.services;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +43,5 @@ public class FilaService {
     public List<FilaEntity> findAll() {
         return this.filaRepository.findAll();
     }
-
+    
 }
