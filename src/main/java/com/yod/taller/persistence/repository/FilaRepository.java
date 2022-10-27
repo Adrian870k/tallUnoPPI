@@ -12,4 +12,5 @@ import com.yod.taller.persistence.entity.TareaEntity;
 public interface FilaRepository extends JpaRepository<FilaEntity, Integer> {
     List<FilaEntity> findAllByTarea(TareaEntity tarea);
     List<FilaEntity> findAll();
+    void delete(FilaEntity filaEntity);
 }
